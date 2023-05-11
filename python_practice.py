@@ -6,18 +6,18 @@ print("Hello World!")
 test = "Hello World!"
 
 # データ型 => 全てのobjectには型がある
-1 # int
-1.0 # float
-"Hello" # str
-True, False # boolean
-[0, 1, 2] # list: mutable
-{"name": "komai", "age": "29", "gender": "man"} # dict: mutable
-{1, 2, 3} # set: mutable
-(1, 2, 3) # turple: immutable
+1  # int
+1.0  # float
+"Hello"  # str
+True, False  # boolean
+[0, 1, 2]  # list: mutable
+{"name": "komai", "age": "29", "gender": "man"}  # dict: mutable
+{1, 2, 3}  # set: mutable
+(1, 2, 3)  # turple: immutable
 
 def sample_func():
     print("Hello World!")
-sample_func # function
+sample_func  # function
 
 class Sample:
     def __init__(self, name):
@@ -25,7 +25,7 @@ class Sample:
 
     def sample_func(self):
         print(f"Hello World! {self.name}!")
-Sample # class
+Sample  # class
 
 # 四則演算
 1 + 1
@@ -41,6 +41,15 @@ Sample # class
 1 == 1
 1 != 2
 
+# if
+old = 19
+if old >= 21:
+    print("お酒OK!")
+elif old == 20:
+    print("お酒ギリOK!")
+else:
+    print("お酒OUT!")
+
 # 関数
 def say_hello(name):
     text = f"Hello World! {name}!"
@@ -54,6 +63,23 @@ class Human:
 
     def say_myname(self):
         print(f"My name is {self.name}.\nI'm {self.gender}.")
+
+# モジュール
+import greeting
+greeting.greeting()
+
+takuma = greeting.Human("Takuma")
+takuma.self_intro()
+takuma.human_greeting("morning")
+
+# パッケージ
+from mobility import car
+toyota_car = car.Car("toyota")
+toyota_car.run()
+
+from mobility import plane
+jal_plane = plane.Plane("JAL")
+jal_plane.fly()
 
 # 組み込み関数
 print("Hello World!")
@@ -70,15 +96,6 @@ print(today)
 # 外部ライブラリ
 import termcolor
 print(termcolor.colored("Hello World!", "red"))
-
-# if
-old = 19
-if old >= 21:
-    print("お酒OK!")
-elif old == 20:
-    print("お酒ギリOK!")
-else:
-    print("お酒OUT!")
 
 # 繰り返し
 name_list = ["komai", "sato", "kusumoto"]
