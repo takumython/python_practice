@@ -68,6 +68,7 @@ class Human:
 import greeting
 greeting.greeting()
 
+
 takuma = greeting.Human("Takuma")
 takuma.self_intro()
 takuma.human_greeting("morning")
