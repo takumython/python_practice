@@ -9,6 +9,7 @@ class Player:
 class HumanPlayer(Player):
     def __init__(self):
         super().__init__()
+        self.name = input("名前を入力してください: ")
 
     def choose_from_options(self):
         print("\nグー、チョキ、パーを入力してください。")
@@ -22,32 +23,17 @@ class HumanPlayer(Player):
 class RobotPlayer(Player):
     def __init__(self):
         super().__init__()
+        self.name = "ロボット"
 
     def choose_from_options(self):
         self.choose_option = random.choice(self.options)
 
 
-class Referee:
-    @classmethod
-    def judge_round(cls, human_choose_option, robot_choose_option):
-        judge_dict = {"グー": "チョキ", "チョキ": "パー", "パー": "グー"}
-        if human_choose_option == robot_choose_option:
-            print(
-                f"\nあなた: {human_choose_option} わたし: {human_choose_option}\nあいこです！もう一度！"
-            )
-            return 0
-        elif judge_dict.get(human_choose_option) == robot_choose_option:
-            print(f"\nあなた: {human_choose_option} わたし: {robot_choose_option}\nあなたの勝ちです！")
-            return 1
-        else:
-            print(f"\nあなた: {human_choose_option} わたし: {robot_choose_option}\nあなたの負けです！")
-            return 2
-
-
 class JankenGame:
     def __init__(self):
-        self.human_player = HumanPlayer()
-        self.robot_player = RobotPlayer()
+        self.human = HumanPlayer()
+        self.robot = RobotPlayer()
+        self.result_list = []
 
     def set_rounds(self):
         while True:
@@ -59,31 +45,52 @@ class JankenGame:
             else:
                 print("数値を入力してください！")
 
+    def judge_round(self, human_choose_option, robot_choose_option):
+        judge_dict = {"グー": "チョキ", "チョキ": "パー", "パー": "グー"}
+        base_text = f"\n{self.human.name}: {human_choose_option}\n{self.robot.name}: {robot_choose_option}"
+        if human_choose_option == robot_choose_option:
+            print(base_text + "\nあいこです！もう一度！")
+            return 0
+        elif judge_dict.get(human_choose_option) == robot_choose_option:
+            print(base_text + "\nあなたの勝ちです！")
+            return 1
+        else:
+            print(base_text + "\nあなたの負けです！")
+            return 2
+
+    def judge_game(self):
+        insert_line = "\n#######結果発表#######\n"
+        base_text = f"勝利回数\n{self.human.name}: {self.result_list.count(1)}回\n{self.robot.name}: {self.result_list.count(2)}回"
+        if self.result_list.count(1) == self.victory_round:
+            print(insert_line + base_text + f"\n{self.human.name}の勝ちです！")
+            return True
+        elif self.result_list.count(2) == self.victory_round:
+            print(insert_line + base_text + f"\n{self.robot.name}の勝ちです！")
+            return True
+        elif len(self.result_list) == self.rounds:
+            print(insert_line + base_text + f"\nこの勝負は引き分けです！")
+            return True
+        else:
+            return False
+
     def play_game(self):
         print("#######プレイ 開始#######")
         self.set_rounds()
 
-        result_list = []
         for i in range(self.rounds):
             print(f"\n#######ラウンド{i + 1} 開始！#######")
 
             result = 0
             while result == 0:
-                for player in self.human_player, self.robot_player:
+                for player in self.human, self.robot:
                     player.choose_from_options()
-                result = Referee.judge_round(
-                    self.human_player.choose_option, self.robot_player.choose_option
+                result = self.judge_round(
+                    self.human.choose_option, self.robot.choose_option
                 )
-            result_list.append(result)
+            self.result_list.append(result)
 
-            if result_list.count(1) == self.victory_round:
-                print(f"\nあなたは{self.victory_round}回、わたしに勝利したので、あなたの勝ちです！")
+            if self.judge_game():
                 break
-            elif result_list.count(2) == self.victory_round:
-                print(f"\nわたしは{self.victory_round}回、あなたに勝利したので、わたしの勝ちです！")
-                break
-        if result_list.count(1) == result_list.count(2):
-            print(f"\nあなたとわたしは{result_list.count(1)}回ずつ勝利したので、この勝負は引き分けです！")
 
 
 if __name__ == "__main__":
