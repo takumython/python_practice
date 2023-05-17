@@ -1,9 +1,53 @@
 import random
 
 
-class RockPaperSciccors:
+class Player:
     def __init__(self):
-        self.choices = ["グー", "チョキ", "パー"]
+        self.options = ["グー", "チョキ", "パー"]
+
+
+class HumanPlayer(Player):
+    def __init__(self):
+        super().__init__()
+
+    def choose_from_options(self):
+        print("\nグー、チョキ、パーを入力してください。")
+        while True:
+            choose_option = input("じゃんけんポン！: ")
+            if choose_option in self.options:
+                break
+        self.choose_option = choose_option
+
+
+class RobotPlayer(Player):
+    def __init__(self):
+        super().__init__()
+
+    def choose_from_options(self):
+        self.choose_option = random.choice(self.options)
+
+
+class Referee:
+    @classmethod
+    def judge_round(cls, human_choose_option, robot_choose_option):
+        judge_dict = {"グー": "チョキ", "チョキ": "パー", "パー": "グー"}
+        if human_choose_option == robot_choose_option:
+            print(
+                f"\nあなた: {human_choose_option} わたし: {human_choose_option}\nあいこです！もう一度！"
+            )
+            return 0
+        elif judge_dict.get(human_choose_option) == robot_choose_option:
+            print(f"\nあなた: {human_choose_option} わたし: {robot_choose_option}\nあなたの勝ちです！")
+            return 1
+        else:
+            print(f"\nあなた: {human_choose_option} わたし: {robot_choose_option}\nあなたの負けです！")
+            return 2
+
+
+class JankenGame:
+    def __init__(self):
+        self.human_player = HumanPlayer()
+        self.robot_player = RobotPlayer()
 
     def set_rounds(self):
         while True:
@@ -15,29 +59,6 @@ class RockPaperSciccors:
             else:
                 print("数値を入力してください！")
 
-    def input_user_choice(self):
-        print("\nグー、チョキ、パーを入力してください。")
-        while True:
-            user_choice = input("じゃんけんポン！: ")
-            if user_choice in self.choices:
-                break
-        self.user_choice = user_choice
-
-    def select_robot_choice(self):
-        self.robot_choice = random.choice(self.choices)
-
-    def judge_round(self):
-        judge_dict = {"グー": "チョキ", "チョキ": "パー", "パー": "グー"}
-        if self.user_choice == self.robot_choice:
-            print(f"\nあなた: {self.user_choice} わたし: {self.robot_choice}\nあいこです！もう一度！")
-            return 0
-        elif judge_dict.get(self.user_choice) == self.robot_choice:
-            print(f"\nあなた: {self.user_choice} わたし: {self.robot_choice}\nあなたの勝ちです！")
-            return 1
-        else:
-            print(f"\nあなた: {self.user_choice} わたし: {self.robot_choice}\nあなたの負けです！")
-            return 2
-
     def play_game(self):
         print("#######プレイ 開始#######")
         self.set_rounds()
@@ -48,9 +69,11 @@ class RockPaperSciccors:
 
             result = 0
             while result == 0:
-                self.input_user_choice()
-                self.select_robot_choice()
-                result = self.judge_round()
+                for player in self.human_player, self.robot_player:
+                    player.choose_from_options()
+                result = Referee.judge_round(
+                    self.human_player.choose_option, self.robot_player.choose_option
+                )
             result_list.append(result)
 
             if result_list.count(1) == self.victory_round:
@@ -64,5 +87,5 @@ class RockPaperSciccors:
 
 
 if __name__ == "__main__":
-    rock_paper_scissors = RockPaperSciccors()
-    rock_paper_scissors.play_game()
+    janken_game = JankenGame()
+    janken_game.play_game()
